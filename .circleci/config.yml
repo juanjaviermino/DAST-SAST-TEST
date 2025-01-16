@@ -29,13 +29,6 @@ jobs:
 
       # 4) Store artifacts (two from the docs, one from Nikto)
       - store_artifacts:
-          path: /tmp/art-1
-          destination: artifact-file
-
-      - store_artifacts:
-          path: /tmp/artifacts
-
-      - store_artifacts:
           path: /tmp/nikto_report.txt
           destination: nikto-report
 

@@ -1,34 +1,46 @@
-version: 2.1
+version: 2
 
 jobs:
-  nikto-scan:
+  build:
+    working_directory: /tmp
     docker:
       - image: cimg/base:stable
     steps:
+      # 1) Install Nikto
       - run:
           name: Install Nikto
           command: |
             sudo apt-get update
             sudo apt-get install -y nikto
 
+      # 2) Run Nikto
       - run:
           name: Run Nikto
           command: |
-            nikto -h "https://dast-sast-test.onrender.com" -output nikto_report.txt
+            nikto -h "https://dast-sast-test.onrender.com" -output /tmp/nikto_report.txt
 
+      # 3) Create the “dummy artifacts” (as shown in CircleCI’s docs)
       - run:
-          name: Check that report exists
+          name: Creating Dummy Artifacts
           command: |
-            echo "Listing files in current dir:"
-            ls -la
-            echo "Content of nikto_report.txt"
-            cat nikto_report.txt
+            echo "my artifact file" > /tmp/art-1
+            mkdir /tmp/artifacts
+            echo "my artifact files in a dir" > /tmp/artifacts/art-2
+
+      # 4) Store artifacts (two from the docs, one from Nikto)
+      - store_artifacts:
+          path: /tmp/art-1
+          destination: artifact-file
 
       - store_artifacts:
-          path: nikto_report.txt
-          destination: nikto_reports
+          path: /tmp/artifacts
+
+      - store_artifacts:
+          path: /tmp/nikto_report.txt
+          destination: nikto-report
 
 workflows:
-  nikto_manual:
+  version: 2
+  build_wf:
     jobs:
-      - nikto-scan
+      - build

@@ -10,10 +10,18 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get install -y nikto
+
       - run:
           name: Run Nikto
           command: |
             nikto -h "https://dast-sast-test.onrender.com" -output nikto_report.txt
+
+      - run:
+          name: Confirm artifact
+          command: |
+            echo "Listing nikto_report.txt:"
+            ls -la nikto_report.txt || echo "No nikto_report.txt found!"
+
       - store_artifacts:
           path: nikto_report.txt
           destination: nikto_reports

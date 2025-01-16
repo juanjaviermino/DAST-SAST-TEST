@@ -1,0 +1,25 @@
+version: 2.1
+
+jobs:
+  nikto-scan:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: Install Nikto
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y nikto
+      - run:
+          name: Run Nikto
+          command: |
+            nikto -h "https://dast-sast-test.onrender.com" -output nikto_report.txt
+      - store_artifacts:
+          path: nikto_report.txt
+          destination: nikto_reports
+
+workflows:
+  nikto_manual:
+    jobs:
+      - nikto-scan:
+          type: approval

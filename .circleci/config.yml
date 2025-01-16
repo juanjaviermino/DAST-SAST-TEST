@@ -17,10 +17,12 @@ jobs:
             nikto -h "https://dast-sast-test.onrender.com" -output nikto_report.txt
 
       - run:
-          name: Confirm artifact
+          name: Check that report exists
           command: |
-            echo "Listing nikto_report.txt:"
-            ls -la nikto_report.txt || echo "No nikto_report.txt found!"
+            echo "Listing files in current dir:"
+            ls -la
+            echo "Content of nikto_report.txt"
+            cat nikto_report.txt
 
       - store_artifacts:
           path: nikto_report.txt

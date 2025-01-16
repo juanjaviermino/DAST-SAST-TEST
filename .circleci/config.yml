@@ -32,4 +32,3 @@ workflows:
   nikto_manual:
     jobs:
       - nikto-scan:
-          type: approval
